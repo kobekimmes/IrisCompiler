@@ -1,0 +1,11 @@
+hello this is a compiler dedicated to my dog Iris;
+
+
+the synatx of the program will be as follows
+
+"""
+idea name(a : num, b : num) -> num {
+    c : num = a + b
+    return c
+}
+"""
