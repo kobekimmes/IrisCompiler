@@ -1,4 +1,4 @@
-#include "util.h"
+#include "../include/util.h"
 
 off_t get_file_size(char* path) {
     struct stat file_stat;
@@ -62,6 +62,7 @@ char* get_file_contents(char* path) {
 
     if (f == NULL) {
         perror("get_file_contents()");
+        free(buffer);
         return NULL;
     }
 
@@ -73,7 +74,6 @@ char* get_file_contents(char* path) {
         }
         else if (ferror(f)) {
             perror("get_file_contents()");
-            return NULL;
         }
         else {
             printf("Read only %zu bytes", bytes_read);
@@ -82,6 +82,7 @@ char* get_file_contents(char* path) {
 
     if (fclose(f) != 0) {
         perror("get_file_contents()");
+        free(buffer);
         return NULL;
     }
 

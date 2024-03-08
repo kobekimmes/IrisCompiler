@@ -1,3 +1,6 @@
+#ifndef ERROR_H
+#define ERROR_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
@@ -15,6 +18,8 @@ struct Error {
 
 struct Error* error_create(struct Iterator* fit, enum error_type type, char* msg);
 
-void error_message(struct Error* err);
+void error_throw(struct Error* err);
 
 void error_free(struct Error* err);
+
+#endif
