@@ -48,6 +48,7 @@ void gen_toks(struct Iterator* iter, struct LinkedList* tokens) {
             list_add(tokens, node_create(next_tok));
             //token_print(next_tok);
         }
+
     }
 
 }
@@ -65,7 +66,7 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
     char curr = source[*ptr];   
     
     //printf("%lu", sizeof(curr));
-    //printf("\nCurrent val at ptr: %d, is %c", *ptr, curr);
+    printf("\nCurrent val at ptr: %d, is %c", *ptr, curr);
     
     
     struct Token* ret_tok;
@@ -122,7 +123,7 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
 
                 char numeral[32] = "";
                 int idx = 0;
-                while ((*ptr) < iter->isize && isdigit(curr = source[(*ptr)++]) && idx < sizeof(numeral)-1) {
+                while (isdigit(curr = source[(*ptr)++]) && idx < sizeof(numeral)-1) {
                     //printf("\n%s", numeral);
                     numeral[idx++] = curr;
                     INC_BYTE_POS(iter);
@@ -140,7 +141,7 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
 
                 char identifier[64] = "";
                 int idx = 0;
-                while ((*ptr) < iter->isize && isalpha(curr = source[(*ptr)++]) && idx < sizeof(identifier)-1) {
+                while (isalpha(curr = source[(*ptr)++]) && idx < sizeof(identifier)-1) {
                     //printf("\n%s", identifier);
                     identifier[idx++] = curr;
                     INC_BYTE_POS(iter);
