@@ -25,8 +25,6 @@ struct Iterator {
 
 struct Iterator* create_iter(char* iterable, size_t isize);
 
-void generate_tokens(struct Iterator* iter, struct Token** tokens, int* token_count);
-
 void iterator_free(struct Iterator* iter);
 
 #endif
