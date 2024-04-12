@@ -1,16 +1,19 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include "file_iterator.h"
+#include "./linked_list.h"
+#include "./file_iterator.h"
 
-struct LinkedList* tokenize(char* path, int* token_count);
+LinkedList* tokenize(char* path, int* token_count);
 
-void gen_toks(struct Iterator* iter, struct LinkedList* tokens);
+void gen_toks(Iterator* iter, LinkedList* tokens);
 
-struct Token* get_next_token(struct Iterator* iter, char* source, int* start);
+Token* get_next_token(Iterator* iter);
 
-char* peek(char* source, int* ptr);
+// char* peek(char* source, int* ptr);
 
-char* eat(char* source, int* ptr);
+// char* eat(char* source, int* ptr);
+
+int findReservedKeyword(char* str);
 
 #endif

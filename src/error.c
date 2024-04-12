@@ -1,7 +1,7 @@
-#include "../include/error.h"
+#include "../include/include.h"
 
-struct Error* error_create(struct Iterator* fit, enum error_type type, char* msg) {
-    struct Error* err = (struct Error*) malloc(sizeof(struct Error));
+Error* error_create(Iterator* fit, enum error_type type, char* msg) {
+    Error* err = (Error*) malloc(sizeof(Error));
     if (fit == NULL || err == NULL) {
         return NULL;
     }
@@ -14,7 +14,7 @@ struct Error* error_create(struct Iterator* fit, enum error_type type, char* msg
     return err;
 }
 
-void error_throw(struct Error* err) {
+void error_throw(Error* err) {
     char out_msg[256];
     switch (err->type) {
         case NONE:
@@ -36,8 +36,9 @@ void error_throw(struct Error* err) {
 }
 
 
-void error_free(struct Error* err) {
+void error_free(Error* err) {
     if (err != NULL) {
         free(err);
+        err = NULL;
     }
 }

@@ -1,9 +1,9 @@
 
-#include "../include/linked_list.h"
+#include "../include/include.h"
 
 
-struct LinkedList* list_create() {
-    struct LinkedList* ll = (struct LinkedList*) malloc(sizeof(struct LinkedList));
+LinkedList* list_create() {
+    LinkedList* ll = (LinkedList*) malloc(sizeof(LinkedList));
     if (ll == NULL) {
         return NULL;
     }
@@ -16,7 +16,10 @@ struct LinkedList* list_create() {
 
 }
 
-void list_add(struct LinkedList* lst, struct Node* node) {
+void list_add(LinkedList* lst,  Node* node) {
+    if (node == NULL) {
+        return;
+    }
     if (lst->head == NULL) {
         lst->head = node;
         lst->tail = node;
@@ -29,12 +32,13 @@ void list_add(struct LinkedList* lst, struct Node* node) {
     }
 }
 
-void list_free(struct LinkedList* ll) {
-    struct Node* ptr = ll->head;
+void list_free(LinkedList* ll) {
+    Node* ptr = ll->head;
     while (ptr != NULL) {
-        struct Node* temp = ptr->next;
+        Node* temp = ptr->next;
         node_free(ptr);
         ptr = temp;
     }
+    free(ll);
 }
 

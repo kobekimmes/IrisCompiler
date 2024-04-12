@@ -1,10 +1,17 @@
+#Compiler
+CC := gcc
 
+#Compiler flag
+CFLAGS := -Wall -fsanitize=address -fsanitize=undefined -g
+
+
+.PHONY: build clean
 
 build: src/*.c
-	gcc -Wall -fsanitize=address -fsanitize=undefined -g -o main src/*.c
+	$(CC) $(CLFAGS) -o iris src/*.c
 
-run: main
-	./main
+run: iris
+	./iris 
 
-clean: main
-	rm -f main
+clean: iris
+	rm -f iris

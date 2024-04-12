@@ -3,10 +3,14 @@
 
 #include <stdlib.h>
 
-struct Node {
+#include "./token.h"
+
+//typedef struct Token;
+
+typedef struct Node {
     struct Token* tok;
     struct Node* next;
-};
+} Node;
 
 struct Node* node_create(struct Token* token_val);
 

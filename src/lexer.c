@@ -1,8 +1,8 @@
+#include "../include/include.h"
 
-#include "../include/lexer.h"
-#include "../include/linked_list.h"
 
-struct LinkedList* tokenize(char* path, int* token_count) {
+
+ LinkedList* tokenize(char* path, int* token_count) {
     int file_byte_count = (int) get_file_size(path);
     
     char* source = get_file_contents(path);
@@ -12,14 +12,14 @@ struct LinkedList* tokenize(char* path, int* token_count) {
         return NULL;
     }
 
-     struct Iterator* fi = create_iter(source, file_byte_count);
+    Iterator* fi = create_iter(source, file_byte_count);
     if (fi == NULL) {
         fprintf(stderr, "tokenize(): Failed to initialize iterator\n");
         free(source);
         return NULL;
     }
 
-    struct LinkedList* tokens = list_create();
+    LinkedList* tokens = list_create();
     if (tokens == NULL) {
         fprintf(stderr, "tokenize(): Failed to initialize tokens array\n");
         free(fi);
@@ -37,13 +37,13 @@ struct LinkedList* tokenize(char* path, int* token_count) {
     return tokens;
 }
 
-void gen_toks(struct Iterator* iter, struct LinkedList* tokens) {
+void gen_toks(Iterator* iter,  LinkedList* tokens) {
     char* source = iter->iterable;
-    struct Token* next_tok;
+    Token* next_tok;
     int ptr = 0;
     //printf("\nThe isize of the file is %zu, and the strlen() of the file is %zu\n", iter->isize, strlen(source));
 
-    while (ptr < iter->isize && (next_tok = get_next_token(iter, source, &ptr)) != NULL) {
+    while (ptr < iter->isize && (next_tok = get_next_token(iter)) != NULL) {
         if (next_tok->type != SPACE) {
             list_add(tokens, node_create(next_tok));
             //token_print(next_tok);
@@ -53,67 +53,78 @@ void gen_toks(struct Iterator* iter, struct LinkedList* tokens) {
 
 }
 
-struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
-    if (*ptr >= iter->isize) {
-        return NULL;
-    }
-
+ Token* get_next_token(Iterator* iter) {
     
-    //char* get_char = eat(source, ptr);
-
-    //char curr = *get_char; 
-
-    char curr = source[*ptr];   
+    char curr = pop(iter);
+    char buf[2];
+    int index = 0;
+    buf[index++] = curr;
     
-    //printf("%lu", sizeof(curr));
-    printf("\nCurrent val at ptr: %d, is %c", *ptr, curr);
+    Token* ret_tok;
     
-    
-    struct Token* ret_tok;
     char err_msg[64];
+
 
     switch (curr) {
         case '\0':
             return NULL;
         case ' ':
         case '\t':
-            ret_tok = token_create(SPACE, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(SPACE, buf, iter->line_pos, iter->byte_pos);
             break;
         case '\n':
-            INC_LINE_POS(iter);
-            ZERO_BP(iter);
-            ret_tok = token_create(SPACE, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(SPACE, buf, iter->line_pos, iter->byte_pos);
             break;
         case '\r':
-            ZERO_BP(iter);
-            ret_tok = token_create(SPACE, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(SPACE, buf, iter->line_pos, iter->byte_pos);
             break;
         case '(':
-            ret_tok = token_create(LPAREN, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(LPAREN, buf, iter->line_pos, iter->byte_pos);
             break;
         case ')':
-            ret_tok = token_create(RPAREN, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(RPAREN, buf, iter->line_pos, iter->byte_pos);
             break;
         case '{':
-            ret_tok = token_create(LBRCKT, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(LBRCKT, buf, iter->line_pos, iter->byte_pos);
             break;
         case '}':
-            ret_tok = token_create(RBRCKT, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(RBRCKT, buf, iter->line_pos, iter->byte_pos);
+            break;
+        case '[':
+            ret_tok = token_create(LSQBRCKT, buf, iter->line_pos, iter->byte_pos);
+            break;
+        case ']':
+            ret_tok = token_create(RSQBRCKT, buf, iter->line_pos, iter->byte_pos);
             break;
         case '=': 
-            ret_tok = token_create(EQ, &curr, iter->line_pos, iter->byte_pos);
+            if (peek(iter, 1) == '=') {
+                buf[index++] = pop(iter);
+                ret_tok = token_create(BIN_OP, buf, iter->line_pos, iter->byte_pos);
+            }
+            else {
+                ret_tok = token_create(EQ, buf, iter->line_pos, iter->byte_pos);
+                
+            }
             break;
         case '+':
         case '/':
         case '-':
         case '*':
-            ret_tok = token_create(BIN_OP, &curr, iter->line_pos, iter->byte_pos);
+        case '<':
+        case '>':
+            if (peek(iter, 1) == '=') {
+                buf[index++] = pop(iter);
+                ret_tok = token_create(BIN_OP, buf, iter->line_pos, iter->byte_pos);
+            }
+            else {
+                ret_tok = token_create(BIN_OP, buf, iter->line_pos, iter->byte_pos);
+            }
             break;
         case ':':
-            ret_tok = token_create(COLON, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(COLON, buf, iter->line_pos, iter->byte_pos);
             break;
         case ';':
-            ret_tok = token_create(SEMICOLON, &curr, iter->line_pos, iter->byte_pos);
+            ret_tok = token_create(SEMICOLON, buf, iter->line_pos, iter->byte_pos);
             break;
         default:
 
@@ -123,16 +134,18 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
 
                 char numeral[32] = "";
                 int idx = 0;
-                while (isdigit(curr = source[(*ptr)++]) && idx < sizeof(numeral)-1) {
-                    //printf("\n%s", numeral);
+                while (isdigit(curr) && idx < sizeof(numeral)-1) {
                     numeral[idx++] = curr;
-                    INC_BYTE_POS(iter);
-                    
+                    if (isdigit(peek(iter, 0))) {
+                        curr = pop(iter);
+                    }
+                    else {
+                        break;
+                    }
+             
                 }
-                numeral[idx] = '\0';
-                (*ptr)--;
-                //INC_BYTE_POS(iter);
-                return token_create(NUMERIC, numeral, l_pos, b_pos);
+                                
+                return token_create(NUMERIC_LITERAL, numeral, l_pos, b_pos);
             }
 
             else if (isalpha(curr)) {
@@ -141,21 +154,30 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
 
                 char identifier[64] = "";
                 int idx = 0;
-                while (isalpha(curr = source[(*ptr)++]) && idx < sizeof(identifier)-1) {
-                    //printf("\n%s", identifier);
+                while (isalnum(curr) && idx < sizeof(identifier)-1) {
                     identifier[idx++] = curr;
-                    INC_BYTE_POS(iter);
-                    
+                    if (isalnum(peek(iter, 0))) {
+                        curr = pop(iter);
+                    }
+                    else {
+                        break;
+                    }
+
                 }
-                identifier[idx] = '\0';
-                (*ptr)--;
-                //INC_BYTE_POS(iter);
-                return token_create(IDENT, identifier, l_pos, b_pos);
+
+                int reserved_tok_val;
+                if ((reserved_tok_val = findReservedKeyword(identifier)) != -1) { 
+                    return token_create(reserved_tok_val, identifier, l_pos, b_pos); 
+                }
+
+                else { 
+                    return token_create(IDENT, identifier, l_pos, b_pos); 
+                }
             }
 
             else {
                 snprintf(err_msg, sizeof(err_msg), "Unexpected value; '%c' read from stream, could not tokenize\n", curr);
-                struct Error* err = error_create(iter, TYPE, err_msg);
+                 Error* err = error_create(iter, TYPE, err_msg);
                 if (err == NULL) {
                     fprintf(stderr, "Error: failed throwing error");
                     return NULL;
@@ -164,30 +186,19 @@ struct Token* get_next_token(struct Iterator* iter, char* source, int* ptr) {
                 return NULL;
             }
         }
-
-    INC_BYTE_POS(iter);
-    (*ptr)++;
     return ret_tok;
 }
 
 
-char* peek(char* source, int* ptr) {
-    if (*ptr < strlen(source) && source[*ptr] != '\0') {
-        return &source[*ptr];
+int findReservedKeyword(char* str) {
+    
+    if (strcmp(str, "num") == 1) {
+        return NUM;
     }
-    else {
-        return NULL;
+    else if (strcmp(str, "word") == 1) {
+        return WORD;
     }
-}
 
+    return -1;
 
-char* eat(char* source, int* ptr) {
-    char* new_char = peek(source, ptr++);
-    if (new_char == NULL) {
-        return NULL;
-    }
-    else {   
-        (*ptr)++;
-        return new_char;
-    }
 }

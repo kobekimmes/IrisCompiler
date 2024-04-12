@@ -1,8 +1,8 @@
 
-#include "../include/node.h"
+#include "../include/include.h"
 
-struct Node* node_create(struct Token* token_val) {
-    struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
+ Node* node_create(Token* token_val) {
+     Node* new_node = (Node*) malloc(sizeof(Node));
 
     if (new_node == NULL) {
         return NULL;
@@ -14,7 +14,7 @@ struct Node* node_create(struct Token* token_val) {
 
 }
 
-void node_free(struct Node* node) {
+void node_free( Node* node) {
     free(node);
     node = NULL;
 }

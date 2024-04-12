@@ -1,5 +1,9 @@
-x : num = (10+20);return x;
+num x = (10+20);
 
-idea kobe(name : word) {
+return x;
+
+function kobe(word name) -> none {
     print(name);
 }
+
+

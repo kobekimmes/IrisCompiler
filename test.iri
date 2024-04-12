@@ -1,5 +1,0 @@
-x : num = (10+20);return x;
-
-idea kobe(name : word) {
-    print(name);
-}

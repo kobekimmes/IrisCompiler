@@ -1,23 +1,15 @@
-#include "../include/token.h"
-#include "../include/linked_list.h"
+#include "../include/include.h"
 #include <string.h>
 
-struct Token* token_create(enum token_type type, char* val, int line_pos, int byte_pos) {
-    struct Token* tok = (struct Token*) malloc(sizeof(struct Token));
+Token* token_create(enum token_type type, char* val, int line_pos, int byte_pos) {
+    Token* tok = (Token*) malloc(sizeof(Token));
     if (tok == NULL || val == NULL) {
         perror("token_create()");
         return NULL;
     }
     tok->type = type;
-
-    size_t val_size;
-    if (tok->type < 10) {
-        val_size = 1;
-    }
-
-    else {
-        val_size = strlen(val);
-    }
+    int val_size = strlen(val);
+    
     tok->val = (char*) malloc(val_size+1);
     if (tok->val == NULL) {
         perror("token_create()");
@@ -27,7 +19,7 @@ struct Token* token_create(enum token_type type, char* val, int line_pos, int by
     
     strncpy(tok->val, val, val_size);
     tok->val[val_size] = '\0';
-    //printf("\nval; \'%s\', is a size of %zu", tok->val, val_size);
+    printf("\nval; \'%s\', is a size of %zu", tok->val, val_size);
     
     tok->line_pos = line_pos;
     tok->byte_pos = byte_pos;
@@ -35,7 +27,7 @@ struct Token* token_create(enum token_type type, char* val, int line_pos, int by
     return tok;
 }
 
-void token_print(struct Token* tok) {
+void token_print(Token* tok) {
     if (tok != NULL) {
         if (tok->val == NULL) {
             printf("\n{ token value is NULL }");
@@ -49,8 +41,8 @@ void token_print(struct Token* tok) {
     }
 }
 
-void tokens_print(struct LinkedList* ll) {
-    struct Node* ptr = ll->head;
+void tokens_print( LinkedList* ll) {
+    Node* ptr = ll->head;
     printf("\nThere are %d tokens", ll->size);
     while (ptr != NULL) {
         if (ptr->tok->type != SPACE) {
@@ -60,15 +52,15 @@ void tokens_print(struct LinkedList* ll) {
     }
 }
 
-void token_free(struct Token* tok) {
+void token_free( Token* tok) {
     free(tok->val);
     tok->val = NULL;
     free(tok);
     tok = NULL;
 }
 
-void tokens_free(struct LinkedList* ll) {
-    struct Node* ptr = ll->head;
+void tokens_free( LinkedList* ll) {
+     Node* ptr = ll->head;
     while (ptr != NULL) {
         if (ptr->tok->type != SPACE) {
             token_free(ptr->tok);
