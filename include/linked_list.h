@@ -15,7 +15,17 @@ typedef struct LinkedList {
 
 LinkedList* list_create();
 
-void list_add(LinkedList* lst, Node* node);
+void list_push_front(LinkedList* lst, Node* node);
+
+void list_push_back(LinkedList* lst, Node* node);
+
+Node* list_pop_head(LinkedList* lst);
+
+Node* list_peek_head(LinkedList* lst);
+
+Node* list_pop_tail(LinkedList* lst);
+
+Node* list_peek_tail(LinkedList* lst);
 
 void list_free(LinkedList* ll);
 

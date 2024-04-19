@@ -1,9 +1,10 @@
-num x = (10+20);
+# This is a single-line comment, which is going to be ignored hopefully by the lexer
+
+num x = (10+2112233);
 
 return x;
 
-function kobe(word name) -> none {
-    print(name);
+function kobe(word name) -> none { # hello there is a comment here as well
+    num y = 10;
+    y == 20;
 }
-
-

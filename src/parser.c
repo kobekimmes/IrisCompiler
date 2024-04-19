@@ -55,6 +55,4 @@ Program* parse_tokens( LinkedList* tokens) {
         ptr = ptr->next;
 
     }
-
-
 }

@@ -16,7 +16,18 @@ LinkedList* list_create() {
 
 }
 
-void list_add(LinkedList* lst,  Node* node) {
+void list_push_front(LinkedList* lst, Node* node) {
+    if (node == NULL) {
+        return;
+    }
+
+    node->next = lst->head;
+    lst->head = node;
+    lst->size++;
+}
+
+
+void list_push_back(LinkedList* lst,  Node* node) {
     if (node == NULL) {
         return;
     }
@@ -31,6 +42,37 @@ void list_add(LinkedList* lst,  Node* node) {
         lst->size++;
     }
 }
+
+Node* list_pop_head(LinkedList* lst) {
+    Node* temp = lst->head;
+    lst->head = lst->head->next;
+    lst->size--;
+    return temp;
+}
+
+Node* list_peek_head(LinkedList* lst) {
+    return lst->head;
+}
+
+Node* list_pop_tail(LinkedList* lst) {
+    Node* ptr = lst->head;
+    int idx = 1;
+
+    while (ptr != NULL && idx < lst->size-1) {
+        ptr = ptr->next;
+    }
+    Node* temp = lst->tail;
+    lst->tail = ptr;
+    lst->tail->next = NULL;
+    return temp;
+
+}
+
+Node* list_peek_tail(LinkedList* lst) {
+    return lst->tail;
+}
+
+
 
 void list_free(LinkedList* ll) {
     Node* ptr = ll->head;

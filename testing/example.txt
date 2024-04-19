@@ -4,8 +4,8 @@ hello this is a compiler dedicated to my dog Iris;
 the synatx of the program will be as follows
 
 """
-idea name(a : num, b : num) -> num {
-    c : num = a + b;
+function f_name(a : num, b : num) -> output_type {
+    num val = a + b;
     return c;
 }
 """

@@ -19,7 +19,6 @@ Token* token_create(enum token_type type, char* val, int line_pos, int byte_pos)
     
     strncpy(tok->val, val, val_size);
     tok->val[val_size] = '\0';
-    printf("\nval; \'%s\', is a size of %zu", tok->val, val_size);
     
     tok->line_pos = line_pos;
     tok->byte_pos = byte_pos;

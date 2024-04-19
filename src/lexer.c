@@ -40,13 +40,10 @@
 void gen_toks(Iterator* iter,  LinkedList* tokens) {
     char* source = iter->iterable;
     Token* next_tok;
-    int ptr = 0;
-    //printf("\nThe isize of the file is %zu, and the strlen() of the file is %zu\n", iter->isize, strlen(source));
 
-    while (ptr < iter->isize && (next_tok = get_next_token(iter)) != NULL) {
+    while (iter->file_pos < iter->isize && (next_tok = get_next_token(iter)) != NULL) {
         if (next_tok->type != SPACE) {
-            list_add(tokens, node_create(next_tok));
-            //token_print(next_tok);
+            list_push_back(tokens, node_create(next_tok));
         }
 
     }
@@ -108,8 +105,10 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
             break;
         case '+':
         case '/':
+            
         case '-':
         case '*':
+            
         case '<':
         case '>':
             if (peek(iter, 1) == '=') {
@@ -126,13 +125,18 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
         case ';':
             ret_tok = token_create(SEMICOLON, buf, iter->line_pos, iter->byte_pos);
             break;
+        // Single-line comments are to begin with '#'
+        case '#':
+            while (peek(iter, 0) != '\n') { pop(iter); }
+            ret_tok = token_create(SPACE, buf, iter->line_pos, iter->byte_pos);
+            break;
         default:
 
             if (isdigit(curr)) {
                 int l_pos = iter->line_pos;
                 int b_pos = iter->byte_pos;
 
-                char numeral[32] = "";
+                char numeral[NUMERAL_SIZE] = "";
                 int idx = 0;
                 while (isdigit(curr) && idx < sizeof(numeral)-1) {
                     numeral[idx++] = curr;
@@ -152,7 +156,7 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
                 int l_pos = iter->line_pos;
                 int b_pos = iter->byte_pos;
 
-                char identifier[64] = "";
+                char identifier[IDENT_SIZE] = "";
                 int idx = 0;
                 while (isalnum(curr) && idx < sizeof(identifier)-1) {
                     identifier[idx++] = curr;
@@ -166,7 +170,7 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
                 }
 
                 int reserved_tok_val;
-                if ((reserved_tok_val = findReservedKeyword(identifier)) != -1) { 
+                if ((reserved_tok_val = find_reserved_keyword(identifier)) != -1) { 
                     return token_create(reserved_tok_val, identifier, l_pos, b_pos); 
                 }
 
@@ -177,7 +181,7 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
 
             else {
                 snprintf(err_msg, sizeof(err_msg), "Unexpected value; '%c' read from stream, could not tokenize\n", curr);
-                 Error* err = error_create(iter, TYPE, err_msg);
+                Error* err = error_create(iter, TYPE, err_msg);
                 if (err == NULL) {
                     fprintf(stderr, "Error: failed throwing error");
                     return NULL;
@@ -190,7 +194,7 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
 }
 
 
-int findReservedKeyword(char* str) {
+int find_reserved_keyword(char* str) {
     
     if (strcmp(str, "num") == 1) {
         return NUM;
@@ -201,4 +205,39 @@ int findReservedKeyword(char* str) {
 
     return -1;
 
+}
+
+
+// char* handle_numeric_literal(Iterator* iter, char curr) {
+//     char numeral[NUMERAL_SIZE] = "";
+//     int idx = 0;
+//     while (isdigit(curr) && idx < sizeof(numeral)-1) {
+//         numeral[idx++] = curr;
+//         if (isdigit(peek(iter, 0))) {
+//             curr = pop(iter);
+//         }
+//         else {
+//             break;
+//         }     
+//     }
+//     return numeral;
+// }
+
+// char* handle_identifier(Iterator* iter, char curr) {
+//     char identifier[IDENT_SIZE] = "";
+//     int idx = 0;
+//     while (isalpha(curr) && idx < sizeof(identifier)-1) {
+//         identifier[idx++] = curr;
+//         if (isalnum(peek(iter, 0))) {
+//             curr = pop(iter);
+//         }
+//         else {
+//             break;
+//         }
+//     }
+//     return identifier;
+// }
+
+char* handle_arithmetic_operators(Iterator* iter, char curr) {
+    return NULL;
 }
