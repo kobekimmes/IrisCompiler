@@ -19,9 +19,11 @@ Token* get_next_token(Iterator* iter);
 
 int find_reserved_keyword(char* str);
 
-char* handle_numeric_literal(Iterator* iter, char curr);
+char* handle_numeric_literal(Iterator* iter);
 
-char* handle_identifier(Iterator* iter, char curr);
+char* handle_identifier(Iterator* iter);
+
+char* handle_string_literal(Iterator* iter);
 
 char* handle_arithmetic_operators(Iterator* iter, char curr);
 

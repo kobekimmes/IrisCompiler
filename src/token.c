@@ -26,6 +26,24 @@ Token* token_create(enum token_type type, char* val, int line_pos, int byte_pos)
     return tok;
 }
 
+Token* empty_token() {
+    Token* tok = (Token*) malloc(sizeof(Token));
+    if (tok == NULL) {
+        perror("empty_token()");
+        return NULL;
+    }
+
+    tok->type = -1;
+
+    tok->val = NULL;
+
+    tok->byte_pos = -1;
+    tok->line_pos = -1;
+
+    return tok;
+
+}
+
 void token_print(Token* tok) {
     if (tok != NULL) {
         if (tok->val == NULL) {

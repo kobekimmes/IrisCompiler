@@ -38,11 +38,11 @@
 }
 
 void gen_toks(Iterator* iter,  LinkedList* tokens) {
-    char* source = iter->iterable;
+    const char* source = iter->iterable;
     Token* next_tok;
 
     while (iter->file_pos < iter->isize && (next_tok = get_next_token(iter)) != NULL) {
-        if (next_tok->type != SPACE) {
+        if (next_tok->type != SPACE || next_tok->type != -1) {
             list_push_back(tokens, node_create(next_tok));
         }
 
@@ -56,6 +56,9 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
     char buf[2];
     int index = 0;
     buf[index++] = curr;
+
+    int l_pos;
+    int b_pos;
     
     Token* ret_tok;
     
@@ -128,46 +131,30 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
         // Single-line comments are to begin with '#'
         case '#':
             while (peek(iter, 0) != '\n') { pop(iter); }
-            ret_tok = token_create(SPACE, buf, iter->line_pos, iter->byte_pos);
+            ret_tok = empty_token();
+            break;
+        case '"':
+            l_pos = iter->line_pos;
+            b_pos = iter->byte_pos;
+            char* string = handle_string_literal(iter);
+            ret_tok = token_create(STRING_LITERAL, string, l_pos, b_pos);
             break;
         default:
 
             if (isdigit(curr)) {
-                int l_pos = iter->line_pos;
-                int b_pos = iter->byte_pos;
+                l_pos = iter->line_pos;
+                b_pos = iter->byte_pos;
 
-                char numeral[NUMERAL_SIZE] = "";
-                int idx = 0;
-                while ((isdigit(curr) || curr == '.') && idx < sizeof(numeral)-1) {
-                    numeral[idx++] = curr;
-                    if (isdigit(peek(iter, 0))) {
-                        curr = pop(iter);
-                    }
-                    else {
-                        break;
-                    }
-             
-                }
+                char* numeral = handle_numeric_literal(iter);
                                 
                 return token_create(NUMERIC_LITERAL, numeral, l_pos, b_pos);
             }
 
             else if (isalpha(curr)) {
-                int l_pos = iter->line_pos;
-                int b_pos = iter->byte_pos;
+                l_pos = iter->line_pos;
+                b_pos = iter->byte_pos;
 
-                char identifier[IDENT_SIZE] = "";
-                int idx = 0;
-                while (isalnum(curr) && idx < sizeof(identifier)-1) {
-                    identifier[idx++] = curr;
-                    if (isalnum(peek(iter, 0))) {
-                        curr = pop(iter);
-                    }
-                    else {
-                        break;
-                    }
-
-                }
+                char* identifier = handle_identifier(iter);
 
                 int reserved_tok_val;
                 if ((reserved_tok_val = find_reserved_keyword(identifier)) != -1) { 
@@ -208,36 +195,75 @@ int find_reserved_keyword(char* str) {
 }
 
 
-// char* handle_numeric_literal(Iterator* iter, char curr) {
-//     char numeral[NUMERAL_SIZE] = "";
-//     int idx = 0;
-//     while (isdigit(curr) && idx < sizeof(numeral)-1) {
-//         numeral[idx++] = curr;
-//         if (isdigit(peek(iter, 0))) {
-//             curr = pop(iter);
-//         }
-//         else {
-//             break;
-//         }     
-//     }
-//     return numeral;
-// }
+char* handle_numeric_literal(Iterator* iter) {
+    int start_file_pos = iter->file_pos-1;
 
-// char* handle_identifier(Iterator* iter, char curr) {
-//     char identifier[IDENT_SIZE] = "";
-//     int idx = 0;
-//     while (isalpha(curr) && idx < sizeof(identifier)-1) {
-//         identifier[idx++] = curr;
-//         if (isalnum(peek(iter, 0))) {
-//             curr = pop(iter);
-//         }
-//         else {
-//             break;
-//         }
-//     }
-//     return identifier;
-// }
+    while (isdigit(peek(iter, 0))) {
+         printf("%c", peek(iter, 0));
+        pop(iter);
+    }
+    int size = iter->file_pos - start_file_pos;
+    char* numeral = (char*) malloc(sizeof(char) * size + 1);
+    if (numeral == NULL) {
+        exit(1);
+    }
+
+    memcpy(numeral, &iter->iterable[start_file_pos], size);
+    numeral[size] = '\0';
+    return numeral;
+}
+
+char* handle_identifier(Iterator* iter) {
+    int start_file_pos = iter->file_pos-1;
+
+    while (isalnum(peek(iter, 0))) {
+        printf("%c", peek(iter, 0));
+        pop(iter);
+    }
+    int size = iter->file_pos - start_file_pos;
+    char* identifier = (char*) malloc(sizeof(char) * size + 1);
+    if (identifier == NULL) {
+        exit(1);
+    }
+    
+    memcpy(identifier, &iter->iterable[start_file_pos], size);
+    identifier[size] = '\0';
+    return identifier;
+}
+
+char* handle_string_literal(Iterator* iter) {
+    int start_file_pos = iter->file_pos-1;
+    
+    while ((peek(iter, 0) != '"')) {
+         printf("string lit: %c\n", peek(iter, 0));
+        pop(iter);
+        
+    }
+    int size = iter->file_pos - start_file_pos;
+    char* string = (char*) malloc(sizeof(char) * size + 1);
+    if (string == NULL) {
+        exit(1);
+    }
+
+    memcpy(string, &iter->iterable[start_file_pos], size);
+    string[size] = '\0';
+    return string;
+}
 
 char* handle_arithmetic_operators(Iterator* iter, char curr) {
     return NULL;
+}
+
+int is_seperator(char ch) {
+    switch (ch) {
+        case '\n': 
+        case ';':
+        case ' ':
+        case '\t':
+            return 1;
+        default:
+            return 0;
+
+
+    }
 }

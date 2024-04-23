@@ -17,14 +17,14 @@
 #define ZERO_FP(fit) ((fit)->file_pos = 0)
 
 typedef struct Iterator {
-    char* iterable;
+    const char* iterable;
     size_t isize;
     int line_pos;
     int byte_pos;
     int file_pos;
 } Iterator;
 
-Iterator* create_iter(char* iterable, size_t isize);
+Iterator* create_iter(const char* iterable, size_t isize);
 
 void iterator_free(Iterator* iter);
 

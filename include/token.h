@@ -51,6 +51,8 @@ typedef struct Token {
 
 Token* token_create(enum token_type type, char* val, int line_pos, int byte_pos);
 
+Token* empty_token();
+
 void token_print(Token* tok);
 
 void tokens_print(LinkedList* ll);

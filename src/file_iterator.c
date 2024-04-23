@@ -2,7 +2,7 @@
 
 // char* reserved[] = {"num", "idea", "for", "if", "return"};
 
-Iterator* create_iter(char* iterable, size_t isize) {
+Iterator* create_iter(const char* iterable, size_t isize) {
     Iterator* fi = (Iterator*) malloc(sizeof(Iterator));
     if (fi == NULL) {
         perror("create_iter()");
