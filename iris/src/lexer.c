@@ -199,7 +199,7 @@ char* handle_numeric_literal(Iterator* iter) {
     int start_file_pos = iter->file_pos-1;
 
     while (isdigit(peek(iter, 0))) {
-         printf("%c", peek(iter, 0));
+        //printf("%c", peek(iter, 0));
         pop(iter);
     }
     int size = iter->file_pos - start_file_pos;
@@ -217,7 +217,7 @@ char* handle_identifier(Iterator* iter) {
     int start_file_pos = iter->file_pos-1;
 
     while (isalnum(peek(iter, 0))) {
-        printf("%c", peek(iter, 0));
+        //printf("%c", peek(iter, 0));
         pop(iter);
     }
     int size = iter->file_pos - start_file_pos;
@@ -235,7 +235,7 @@ char* handle_string_literal(Iterator* iter) {
     int start_file_pos = iter->file_pos-1;
     
     while ((peek(iter, 0) != '"')) {
-         printf("string lit: %c\n", peek(iter, 0));
+        //printf("string lit: %c\n", peek(iter, 0));
         pop(iter);
         
     }

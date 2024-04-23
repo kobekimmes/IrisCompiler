@@ -2,7 +2,7 @@
 
 num x = (10+2112233);
 
-return "hello";
+return hello;
 
 function kobe(word name) -> none { # hello there is a comment here as well
     num y = 10;

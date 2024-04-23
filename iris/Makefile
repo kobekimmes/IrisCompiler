@@ -4,7 +4,7 @@ CC := gcc
 #Compiler flag
 CFLAGS := -Wall -fsanitize=address -fsanitize=undefined -g
 
-TARGET := iris
+TARGET := iris.x
 
 SRC := src/*.c
 
@@ -16,5 +16,8 @@ build: $(SRC)
 run: $(TARGET)
 	./$(TARGET)
 
-clean: iris
+test: $(TARGET) testing/test.iri
+	./$(TARGET) testing/test.iri
+
+clean: $(TARGET)
 	rm -f $(TARGET)
