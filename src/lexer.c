@@ -138,7 +138,7 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
 
                 char numeral[NUMERAL_SIZE] = "";
                 int idx = 0;
-                while (isdigit(curr) && idx < sizeof(numeral)-1) {
+                while ((isdigit(curr) || curr == '.') && idx < sizeof(numeral)-1) {
                     numeral[idx++] = curr;
                     if (isdigit(peek(iter, 0))) {
                         curr = pop(iter);
