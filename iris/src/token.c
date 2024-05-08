@@ -58,30 +58,36 @@ void token_print(Token* tok) {
     }
 }
 
-void tokens_print( LinkedList* ll) {
+void tokens_print(LinkedList* ll) {
+    if (ll->type != TOK) {
+        return;
+    }
     Node* ptr = ll->head;
     printf("\nThere are %d tokens", ll->size);
     while (ptr != NULL) {
-        if (ptr->tok->type != SPACE) {
-            token_print(ptr->tok);
+        Token* t = (Token*) ptr->val;
+        if (t->type != SPACE) {
+            token_print(t);
         }
         ptr = ptr->next;
+        
     }
 }
 
-void token_free( Token* tok) {
-    free(tok->val);
-    tok->val = NULL;
-    free(tok);
-    tok = NULL;
+void token_free(Token** tok) {
+    free((*tok)->val);
+    (*tok)->val = NULL;
+    free(*tok);
+    *tok = NULL;
 }
 
-void tokens_free( LinkedList* ll) {
-     Node* ptr = ll->head;
+void tokens_free(LinkedList* ll) {
+    if (ll->type != TOK) {
+        return;
+    }
+    Node* ptr = ll->head;
     while (ptr != NULL) {
-        if (ptr->tok->type != SPACE) {
-            token_free(ptr->tok);
-        }
+        token_free(&(ptr->val));
         ptr = ptr->next;
     }
 

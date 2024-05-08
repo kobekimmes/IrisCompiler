@@ -28,31 +28,31 @@
 // }
 
 
-Program* parse_tokens( LinkedList* tokens) {
-    if (tokens == NULL) {
-        return NULL;
-    }
+// Program* parse_tokens( LinkedList* tokens) {
+//     if (tokens == NULL) {
+//         return NULL;
+//     }
 
-     Node* ptr = tokens->head;
-    while (ptr != NULL) {
+//     Node* ptr = tokens->head;
+//     while (ptr != NULL) {
 
-        switch (ptr->tok->type){
-        case NUM:
+//         switch (ptr->tok->type){
+//         case NUM:
             
-            break;
+//             break;
 
-        case WORD:
+//         case WORD:
 
-            break;
+//             break;
         
-        case RETURN:
-            break;
+//         case RETURN:
+//             break;
             
-        default:
-            break;
-        }
+//         default:
+//             break;
+//         }
 
-        ptr = ptr->next;
+//         ptr = ptr->next;
 
-    }
-}
+//     }
+// }

@@ -5,15 +5,16 @@
 
 #include "./token.h"
 
-//typedef struct Token;
+enum VALUE_TYPE { TOK, INST, DATA };
 
 typedef struct Node {
-    struct Token* tok;
+    void* val;
+    int type;
     struct Node* next;
 } Node;
 
-struct Node* node_create(struct Token* token_val);
+Node* node_create(void* val, enum VALUE_TYPE node_type);
 
-void node_free(struct Node* node);
+void node_free(Node** node);
 
 #endif

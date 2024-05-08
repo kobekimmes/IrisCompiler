@@ -21,7 +21,7 @@ typedef struct {
         LIST_TYPE
     };
 
-} Expr;
+} Expression;
 
 
 typedef struct {
@@ -39,7 +39,7 @@ typedef struct {
         STMT_RETURN
     };
 
-    Expr** body;
+    Expression** body;
     
 
 } Statement;

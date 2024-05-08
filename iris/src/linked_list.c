@@ -2,18 +2,17 @@
 #include "../include/include.h"
 
 
-LinkedList* list_create() {
+LinkedList* list_create(enum VALUE_TYPE type) {
     LinkedList* ll = (LinkedList*) malloc(sizeof(LinkedList));
     if (ll == NULL) {
         return NULL;
     }
+    ll->type = type;
     ll->head = NULL;
     ll->tail = NULL;
     ll->size = 0;
 
     return ll;
-
-
 }
 
 void list_push_front(LinkedList* lst, Node* node) {
@@ -74,13 +73,14 @@ Node* list_peek_tail(LinkedList* lst) {
 
 
 
-void list_free(LinkedList* ll) {
-    Node* ptr = ll->head;
+void list_free(LinkedList** ll) {
+    Node* ptr = (*ll)->head;
     while (ptr != NULL) {
         Node* temp = ptr->next;
-        node_free(ptr);
+        node_free(&ptr);
         ptr = temp;
     }
-    free(ll);
+    free(*ll);
+    *ll = NULL;
 }
 

@@ -19,7 +19,7 @@
         return NULL;
     }
 
-    LinkedList* tokens = list_create();
+    LinkedList* tokens = list_create(TOK);
     if (tokens == NULL) {
         fprintf(stderr, "tokenize(): Failed to initialize tokens array\n");
         free(fi);
@@ -43,14 +43,14 @@ void gen_toks(Iterator* iter,  LinkedList* tokens) {
 
     while (iter->file_pos < iter->isize && (next_tok = get_next_token(iter)) != NULL) {
         if (next_tok->type != SPACE || next_tok->type != -1) {
-            list_push_back(tokens, node_create(next_tok));
+            list_push_back(tokens, node_create(next_tok, TOK));
         }
 
     }
 
 }
 
- Token* get_next_token(Iterator* iter) {
+Token* get_next_token(Iterator* iter) {
     
     char curr = pop(iter);
     char buf[2];

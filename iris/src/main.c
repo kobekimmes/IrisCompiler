@@ -11,11 +11,11 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        parse_tokens(toks);
+        // parse_tokens(toks);
 
 
         tokens_free(toks);
-        list_free(toks);
+        list_free(&toks);
 
     }
     else {

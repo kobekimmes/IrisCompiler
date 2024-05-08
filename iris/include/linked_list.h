@@ -10,10 +10,11 @@ typedef struct LinkedList {
     struct Node* head;
     struct Node* tail;
     int size;
+    int type;
 } LinkedList;
 
 
-LinkedList* list_create();
+LinkedList* list_create(enum VALUE_TYPE type);
 
 void list_push_front(LinkedList* lst, Node* node);
 
@@ -27,6 +28,6 @@ Node* list_pop_tail(LinkedList* lst);
 
 Node* list_peek_tail(LinkedList* lst);
 
-void list_free(LinkedList* ll);
+void list_free(LinkedList** ll);
 
 #endif

@@ -57,7 +57,7 @@ void token_print(Token* tok);
 
 void tokens_print(LinkedList* ll);
 
-void token_free(Token* tok);
+void token_free(Token** tok);
 
 void tokens_free(LinkedList* ll);
 
