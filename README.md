@@ -18,17 +18,21 @@ Written in C with no extra-dependencies
 The Iris language is designed to model C and be an introduction to programming for  
 new developers! It also takes inspiration from weakly typed languages like Python and TypeScript.
 
-#This is a single line comment, ignored by the compiler  
+`
+var_type var_name = ...; 
 
-var_type var_name = ...;  
+#This is a single line comment, ignored by the compiler  
 
 function f_name(type var1, type var2) -> return_type {  
     return ...;  
 }  
-
+`
 An example of this being used;
 
+`
 #This function returns the sum of two numbers
+
+An example of this being used;
 
 num x = 10;
   
@@ -36,6 +40,6 @@ function sum(num a, num b) -> num {
     num c = a + b;  
     return c;  
 }  
-
+`
 
 
