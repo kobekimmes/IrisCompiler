@@ -4,7 +4,7 @@ CC := gcc
 #Compiler flag
 CFLAGS := -Wall -fsanitize=address -fsanitize=undefined -g
 
-TARGET := iris/iris.x
+TARGET := iris/iris
 
 SRC := iris/src/*.c
 
