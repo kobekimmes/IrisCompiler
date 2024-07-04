@@ -40,6 +40,20 @@ function sum(num a, num b) -> num {
     return c;  
 }
 ```
+# Installation
+
+```
+git clone https://github.com/kobekimmes/IrisCompiler.git
+cd IrisCompiler
+./install.sh
+```
+
+# Usage
+
+```
+iris <filename>.eye
+```
+
 
 
 
