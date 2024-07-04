@@ -4,9 +4,9 @@ CC := gcc
 #Compiler flag
 CFLAGS := -Wall -fsanitize=address -fsanitize=undefined -g
 
-TARGET := iris/iris
+TARGET := iris
 
-SRC := iris/src/*.c
+SRC := src/*.c
 
 .PHONY: build clean
 
@@ -16,8 +16,8 @@ build: $(SRC)
 run: $(TARGET)
 	./$(TARGET)
 
-test: $(TARGET) iris/testing/test.iri
-	./$(TARGET) iris/testing/test.iri
+test: $(TARGET) testing/test.iri
+	./$(TARGET) testing/test.iri
 
 clean: $(TARGET)
 	rm -f $(TARGET)
