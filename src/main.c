@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv) {
     int num_toks = 0;
-    if (argc > 1) {
+    if (argc == 2) {
         
         LinkedList* toks = tokenize(argv[1], &num_toks);
         if (toks == NULL) {
@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
     }
     else {
-        printf("Please enter a path");
+        printf("Usage: iris <filename>");
     }
 
     return 0;
